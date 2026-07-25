@@ -16,11 +16,21 @@
         <div class="col-md-6 mb-3">
             <div class="card">
                 <div class="card-body">
-                    <h5>@autor.Nombre @autor.Apellido</h5>
-                    <h6>Nacionalidad: @autor.Nacionalidad</h6>
-                    <p>Edad: @(DateTime.Now.Year - autor.FechaNacimiento.Year) años</p>
+                    <h5 class="card-title">@autor.Nombre @autor.Apellido</h5>
+                    <div class="d-flex flex-row row-gap-4 justify-content-between">
+                        <div>
+                            <h6>Nacionalidad: @autor.Nacionalidad</h6>
+                            <p>Edad: @(DateTime.Now.Year - autor.FechaNacimiento.Year) años</p>
+                        </div>
 
-                    <a asp-action="Details" asp-route-id="@autor.ID">Ver</a>
+                        <div class="d-flex flex-row gap-2 justify-content-start align-items-end">
+                            <a asp-action="Details" asp-route-id="@autor.ID">Ver</a>
+                            <a asp-action="Edit" asp-route-id="@autor.ID">Editar</a>
+                            <form asp-action="Delete" asp-route-id="@autor.ID" method="post" class="d-inline">
+                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

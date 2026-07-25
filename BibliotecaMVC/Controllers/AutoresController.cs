@@ -43,9 +43,55 @@ namespace BibliotecaMVC.Controllers
             {
                 autor.ID = _autores.Max(a => a.ID) + 1;
                 _autores.Add(autor);
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             return View(autor);
+        }
+
+        public IActionResult Edit(int id)
+        {
+            var autor = _autores.FirstOrDefault(a => a.ID == id);
+            if (autor == null)
+            {
+                return NotFound();
+            }
+            return View(autor);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(Autor autor)
+        {
+            if (ModelState.IsValid)
+            {
+                var existingAutor = _autores.FirstOrDefault(a => a.ID == autor.ID);
+                if (existingAutor == null)
+                {
+                    return NotFound();
+                }
+
+                existingAutor.Nombre = autor.Nombre;
+                existingAutor.Apellido = autor.Apellido;
+                existingAutor.Nacionalidad = autor.Nacionalidad;
+                existingAutor.FechaNacimiento = autor.FechaNacimiento;
+                existingAutor.Activo = autor.Activo;
+
+                return RedirectToAction("Index");
+            }
+            return BadRequest();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            var item = _autores.FirstOrDefault(a => a.ID == id);
+            if (item != null)
+            {
+                _autores.Remove(item);
+            }
+
+            return RedirectToAction("Index");
         }
     }
 }
