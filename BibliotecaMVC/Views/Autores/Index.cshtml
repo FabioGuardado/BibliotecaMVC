@@ -1,43 +1,28 @@
 ﻿@using BibliotecaMVC.Models
+@model IEnumerable<Autor>
 
 @{
-    List<Autor> autores = ViewBag.Autores;
+    ViewData["Title"] = "Listado de Autores";
 }
 
-<h2>Catálogo de Autores</h2>
+<h1>@ViewData["Title"]</h1>
+<p>Hay @Model.Count() autores registrados.</p>
 
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Apellido</th>
-            <th>Nacionalidad</th>
-            <th>Fecha de Nacimiento</th>
-            <th>Activo</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach
-        (var autor in autores)
-        {
-            <tr>
-                <td>@autor.ID</td>
-                <td>@autor.Nombre</td>
-                <td>@autor.Apellido</td>
-                <td>@autor.Nacionalidad</td>
-                <td>@autor.FechaNacimiento.ToShortDateString()</td>
-                <td>
-                    @if (autor.Activo)
-                    {
-                        <span class="badge bg-success">Activo</span>
-                    }
-                    else
-                    {
-                        <span class="badge bg-danger">Inactivo</span>
-                    }
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<a asp-action="Create" class="btn btn-primary mb-4">Nuevo Autor +</a>
+
+<div class="row">
+    @foreach (var autor in Model)
+    {
+        <div class="col-md-6 mb-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5>@autor.Nombre @autor.Apellido</h5>
+                    <h6>Nacionalidad: @autor.Nacionalidad</h6>
+                    <p>Edad: @(DateTime.Now.Year - autor.FechaNacimiento.Year) años</p>
+
+                    <a asp-action="Details" asp-route-id="@autor.ID">Ver</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
