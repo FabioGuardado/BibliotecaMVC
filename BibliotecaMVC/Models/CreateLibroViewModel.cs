@@ -2,9 +2,8 @@
 
 namespace BibliotecaMVC.Models
 {
-    public class Libro
+    public class CreateLibroViewModel
     {
-        public int ID { get; set; }
         [Required]
         public string Titulo { get; set; }
         [Required]
@@ -13,8 +12,7 @@ namespace BibliotecaMVC.Models
         public string Categoria { get; set; }
         [Required]
         public decimal Precio { get; set; }
-        public bool Disponible { get; set; } = true;
-
-        public string? ImageUrl { get; set; } = null;
+        public bool? Disponible { get; set; } = null;
+        public IFormFile ImageFile { get; set; }
     }
 }

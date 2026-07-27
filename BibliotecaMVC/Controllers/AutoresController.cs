@@ -76,7 +76,7 @@ namespace BibliotecaMVC.Controllers
 
                 return RedirectToAction("Index");
             }
-            return BadRequest();
+            return View(autor);
         }
 
         [HttpPost]

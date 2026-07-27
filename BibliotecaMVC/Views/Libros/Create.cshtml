@@ -1,11 +1,11 @@
 ﻿@using BibliotecaMVC.Models
-@model Libro;
+@model CreateLibroViewModel;
 
 @{
     ViewData["Title"] = "Crear Libro";
 }
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data">
     <div class="mb-3">
         <label asp-for="Titulo"></label>
         <input asp-for="Titulo" class="form-control" />
@@ -25,6 +25,11 @@
         <label asp-for="Precio"></label>
         <input asp-for="Precio" class="form-control" />
         <span asp-validation-for="Precio" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="ImageFile" class="form-label">Portada</label>
+        <input asp-for="ImageFile" class="form-control" type="file" id="portada">
     </div>
 
     <button type="submit" class="btn btn-success">Crear</button>

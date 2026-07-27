@@ -7,9 +7,43 @@ namespace BibliotecaMVC.Controllers
     {
         private static List<Libro> _libros = new List<Libro>()
             {
-                new Libro { ID = 1, Titulo = "Clean Code", Autor = "Robert Martin", Categoria = "Programación", Precio = 35.5M, Disponible = true },
-                new Libro { ID = 2, Titulo = "Cien Años de Soledad", Autor = "Gabriel García Márquez", Categoria = "Literatura", Precio = 18, Disponible = false },
+                new Libro { ID = 1, Titulo = "Clean Code", Autor = "Robert Martin", Categoria = "Programación", Precio = 35.5M, Disponible = true, ImageUrl = null },
+                new Libro { ID = 2, Titulo = "Cien Años de Soledad", Autor = "Gabriel García Márquez", Categoria = "Literatura", Precio = 18, Disponible = false, ImageUrl = null },
             };
+
+        private readonly IWebHostEnvironment _environment;
+
+        public LibrosController(IWebHostEnvironment environment)
+        {
+            _environment = environment;
+        }
+
+        private async Task<string> ProcessImageUploadAsync(IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+            {
+                return null;
+            }
+
+            string fileExtension = Path.GetExtension(file.FileName);
+            string uniqueFileName = Guid.NewGuid().ToString() + fileExtension;
+
+            string folderPath = Path.Combine(_environment.WebRootPath, "Images");
+            string physicalPath = Path.Combine(folderPath, uniqueFileName);
+
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
+
+            using (var fileStream = new FileStream(physicalPath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+
+            return "/Images/" + uniqueFileName;
+        }
+
 
         public IActionResult Index()
         {
@@ -33,12 +67,24 @@ namespace BibliotecaMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Libro libro)
+        public async Task<IActionResult> Create(CreateLibroViewModel libro)
         {
             if (ModelState.IsValid)
             {
-                libro.ID = _libros.Max(a => a.ID) + 1;
-                _libros.Add(libro);
+                string imageUrl = await ProcessImageUploadAsync(libro.ImageFile);
+
+                var newLibro = new Libro()
+                {
+                    ID = _libros.Max(a => a.ID) + 1,
+                    Autor = libro.Autor,
+                    Titulo = libro.Titulo,
+                    Categoria = libro.Categoria,
+                    Precio = libro.Precio,
+                    Disponible = libro.Disponible ?? true,
+                    ImageUrl = imageUrl
+                };
+
+                _libros.Add(newLibro);
                 return RedirectToAction("Index");
             }
             return View(libro);
@@ -74,7 +120,7 @@ namespace BibliotecaMVC.Controllers
 
                 return RedirectToAction("Index");
             }
-            return BadRequest();
+            return View(libro);
         }
 
         [HttpPost]

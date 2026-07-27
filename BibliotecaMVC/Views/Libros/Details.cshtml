@@ -5,20 +5,42 @@
     ViewData["Title"] = "Detalles del Libro";
 }
 
-<h1>@Model.Titulo</h1>
+<div class="container mb-4">
+    <div class="row">
+        <div class="d-flex flex-row align-items-center justify-content-start column-gap-4">
 
-<dl class="row">
-    <dt>Categoría</dt>
-    <dd>@Model.Categoria</dd>
+            <div>
+                @if (@Model.ImageUrl != null)
+                {
+                <img src="@Model.ImageUrl" alt="@Model.Titulo" class="img-fluid" style="max-height:300px;" />
+                }
+                else {
+                    <div class="d-flex align-items-center justify-content-center text-black">
+                        <i class="bi bi-book" style="font-size:100px;"></i>
+                    </div>
+                }
+            </div>
 
-    <dt>Autor</dt>
-    <dd>@Model.Autor</dd>
+            <div class="d-flex flex-column row-gap-2">
+                <h1>@Model.Titulo</h1>
 
-    <dt>Precio</dt>
-    <dd>@Model.Precio.ToString("C")</dd>
+                <dl class="row">
+                    <dt>Categoría</dt>
+                    <dd>@Model.Categoria</dd>
 
-    <dt>Disponible</dt>
-    <dd>@(Model.Disponible ? "Sí" : "No")</dd>
-</dl>
+                    <dt>Autor</dt>
+                    <dd>@Model.Autor</dd>
+
+                    <dt>Precio</dt>
+                    <dd>@Model.Precio.ToString("C")</dd>
+
+                    <dt>Disponible</dt>
+                    <dd>@(Model.Disponible ? "Sí" : "No")</dd>
+                </dl>
+            </div>
+
+        </div>
+    </div>
+</div>
 
 <a asp-action="Index" class="btn btn-primary">Volver al listado</a>
