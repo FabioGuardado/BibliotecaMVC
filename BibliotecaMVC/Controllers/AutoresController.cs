@@ -15,8 +15,6 @@ namespace BibliotecaMVC.Controllers
             };
         public IActionResult Index()
         {
-            // ViewBag.Autores = _autores;
-
             return View(_autores);
         }
 
