@@ -1,8 +1,91 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
-}
+﻿<div class="container mt-5">
+    <div class="row align-items-center">
+        <div class="col-md-6">
+            <h1 class="display-4">BibliotecaMVC</h1>
 
-<div class="text-center">
-    <h1>Sistema de Gestión de Biblioteca</h1>
-    <p>Bienvenidos al sistema desarrollado con ASP.Net Core MVC.</p>
+            <p class="lead">
+                Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley,
+                the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for Letraset's Body Type sheets.
+                It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged.
+                It was popularised thanks to these sheets and more recently with desktop publishing software
+                like Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+            </p>
+            <a asp-controller="Home" asp-action="About" class="btn btn-primary">Conocer más</a>
+        </div>
+        <div class="col-md-6 text-center">
+            <img src="https://picsum.photos/500/350" alt="Biblioteca" class="img-fluid rounded shadow" />
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Servicios de la biblioteca</h2>
+    <div class="row">
+
+        <!-- Servicio 1 -->
+        <div class="col-md-4 mb-3">
+            <div class="card w-100 shadow-sm">
+                <img src="https://picsum.photos/200/100" class="card-img-top" alt="Servicio 1">
+                <div class="card-body">
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Servicio 2 -->
+        <div class="col-md-4 mb-3">
+            <div class="card w-100 shadow-sm">
+                <img src="https://picsum.photos/200/100" class="card-img-top" alt="Servicio 2">
+                <div class="card-body">
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Servicio 3 -->
+        <div class="col-md-4 mb-3">
+            <div class="card w-100 shadow-sm">
+                <img src="https://picsum.photos/200/100" class="card-img-top" alt="Servicio 3">
+                <div class="card-body">
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="row text-center">
+        <div class="col-md-4">
+            <h2 class="text-primary">500+</h2>
+            <p>Libros disponibles</p>
+        </div>
+
+        <div class="col-md-4">
+            <h2 class="text-primary">120+</h2>
+            <p>Autores registrados</p>
+        </div>
+
+        <div class="col-md-4">
+            <h2 class="text-primary">25+</h2>
+            <p>Categorías literarias</p>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <div class="bg-primary text-white rounded p-5 text-center">
+        <h2>Explora nuestra biblioteca virtual</h2>
+        <p>
+            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+            Lorem Ipsum has been the industry's standard dummy text ever since 1966, when designers at Letraset and James Mosley,
+            the librarian at St Bride Printing Library in London, took a 1914 Cicero translation and scrambled it to make dummy text for
+            Letraset's Body Type sheets. It has survived not only many decades, but also the leap into electronic typesetting, remaining essentially unchanged.
+            It was popularised thanks to these sheets and more recently with desktop publishing software like
+            Aldus PageMaker and Microsoft Word including versions of Lorem Ipsum.
+        </p>
+        <a asp-controller="Home" asp-action="About" class="btn btn-outline-light">Acerca de la Biblioteca</a>
+    </div>
 </div>
