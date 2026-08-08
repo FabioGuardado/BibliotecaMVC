@@ -90,8 +90,13 @@ body {
         font-style: italic;
     }
 
-@media (max-width: 768px) {
+@media (max-width: 1024px) {
     .about-container {
         flex-direction: column;
+        padding: 8px 0;
+    }
+
+    .team-section {
+        padding: 8px 0;
     }
 }
