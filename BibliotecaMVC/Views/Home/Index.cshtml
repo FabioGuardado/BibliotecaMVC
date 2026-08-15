@@ -44,12 +44,31 @@
     </div>
 </div>
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Servicios de la biblioteca</h2>
-    <div class="row">
+<!-- SIN RESPONSIVE -->
+<div class="section">
+    <h2 class="text-center mb-4">1. Sin responsive</h2>
+    <div class="contenedor sin-responsive">
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 1" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 2" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 3" })
+    </div>
+</div>
 
-        <!-- Servicio 1 -->
-        <div class="col-md-4 mb-3">
+<!-- MEDIA QUERIES -->
+<div class="section">
+    <h2 class="text-center mb-4">2. Responsive con Media Queries</h2>
+    <div class="contenedor media-query">
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 1" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 2" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 3" })
+    </div>
+</div>
+
+<!-- BOOTSTRAP -->
+<div class="container mt-5">
+    <h2 class="text-center mb-4">3. Responsive con Bootstrap</h2>
+    <div class="row">
+        <div class="col-4 col-sm-12 mb-3">
             <div class="card w-100 shadow-sm">
                 <img src="https://picsum.photos/200/100" class="card-img-top" alt="Servicio 1">
                 <div class="card-body">
@@ -58,8 +77,7 @@
             </div>
         </div>
 
-        <!-- Servicio 2 -->
-        <div class="col-md-4 mb-3">
+        <div class="col-4 col-sm-12 mb-3">
             <div class="card w-100 shadow-sm">
                 <img src="https://picsum.photos/200/100" class="card-img-top" alt="Servicio 2">
                 <div class="card-body">
@@ -68,8 +86,7 @@
             </div>
         </div>
 
-        <!-- Servicio 3 -->
-        <div class="col-md-4 mb-3">
+        <div class="col-4 col-sm-12 mb-3">
             <div class="card w-100 shadow-sm">
                 <img src="https://picsum.photos/200/100" class="card-img-top" alt="Servicio 3">
                 <div class="card-body">
@@ -77,7 +94,26 @@
                 </div>
             </div>
         </div>
+    </div>
+</div>
 
+<!-- CSS GRID -->
+<div class="section">
+    <h2 class="text-center mb-4">4. Responsive con CSS Grid</h2>
+    <div class="contenedor grid-layout">
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 1" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 2" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 3" })
+    </div>
+</div>
+
+<!-- FLEXBOX -->
+<div class="section">
+    <h2 class="text-center mb-4">5. Responsive con Flexbox</h2>
+    <div class="contenedor flex-layout">
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 1" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 2" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 3" })
     </div>
 </div>
 

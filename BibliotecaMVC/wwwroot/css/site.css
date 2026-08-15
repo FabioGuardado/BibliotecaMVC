@@ -100,3 +100,67 @@ body {
         padding: 8px 0;
     }
 }
+
+/*
+    SEMANA 5
+*/
+
+.section {
+    border: 1px solid red;
+    padding: 10px;
+    margin: 20px;
+}
+
+.contenedor {
+    border: 1px solid blue;
+    padding: 5px;
+}
+
+.card-demo {
+    border: 1px solid black;
+}
+
+/* Media queries */
+.media-query {
+    display: flex;
+    gap: 20px;
+}
+
+    .media-query .card-demo {
+        flex: 1;
+    }
+
+@media (max-width: 768px) {
+    .media-query {
+        flex-direction: column;
+    }
+}
+
+/* CSS Grid */
+.grid-layout {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+}
+
+@media (max-width: 768px) {
+    .grid-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+/* Flexbox */
+.flex-layout {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .flex-layout {
+        flex-direction: column;
+    }
+}
