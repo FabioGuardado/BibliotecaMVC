@@ -44,61 +44,25 @@
     </div>
 </div>
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Servicios de la biblioteca</h2>
-    <div class="row">
-
-        <!-- Servicio 1 -->
-        <div class="col-md-4 mb-3">
-            <div class="card w-100 shadow-sm">
-                <img src="https://picsum.photos/200/100" class="card-img-top" alt="Servicio 1">
-                <div class="card-body">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Servicio 2 -->
-        <div class="col-md-4 mb-3">
-            <div class="card w-100 shadow-sm">
-                <img src="https://picsum.photos/200/100" class="card-img-top" alt="Servicio 2">
-                <div class="card-body">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Servicio 3 -->
-        <div class="col-md-4 mb-3">
-            <div class="card w-100 shadow-sm">
-                <img src="https://picsum.photos/200/100" class="card-img-top" alt="Servicio 3">
-                <div class="card-body">
-                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
-                </div>
-            </div>
-        </div>
-
+<div class="bento-section">
+    <h2 class="text-center mb-4">Servicios</h2>
+    <div class="bento-container">
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 1", customClasses = "bento-item-4x2" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 2", customClasses = "bento-item-1x1" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 3", customClasses = "bento-item-3x1" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 4", customClasses = "bento-item-3x1" })
+        @await Html.PartialAsync("_ServiceCard", new ServiceCard { ImageUrl = "https://picsum.photos/200/100", Text = "Servicio 5", customClasses = "bento-item-1x1" })
     </div>
 </div>
 
-<div class="container mt-5">
-    <div class="row text-center">
-        <div class="col-md-4">
-            <h2 class="text-primary">500+</h2>
-            <p>Libros disponibles</p>
-        </div>
-
-        <div class="col-md-4">
-            <h2 class="text-primary">120+</h2>
-            <p>Autores registrados</p>
-        </div>
-
-        <div class="col-md-4">
-            <h2 class="text-primary">25+</h2>
-            <p>Categorías literarias</p>
-        </div>
-    </div>
-</div>
+@await Html.PartialAsync("_Counters", new CountersViewModel
+{
+    Counters = [
+            new CounterItemViewModel { Id = 1, Header = "500+", Description = "Libros disponibles" },
+            new CounterItemViewModel { Id = 2, Header = "120+", Description = "Autores registrados" },
+            new CounterItemViewModel { Id = 3, Header = "25+", Description = "Categorías literarias" }
+        ]
+})
 
 <div class="container mt-5">
     <div class="bg-primary text-white rounded p-5 text-center">
@@ -115,50 +79,15 @@
     </div>
 </div>
 
-<div class="container mt-5">
-    <div class="row mb-2">
-        <h1 class="text-center">
-            Preguntas frecuentes
-        </h1>
-    </div>
-    <div class="row">
-        <div class="accordion" id="accordionPanelsStayOpenExample">
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                        Pregunta #1
-                    </button>
-                </h2>
-                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-                    <div class="accordion-body">
-                        <strong>This is the first item’s accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                    </div>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
-                        Pregunta #2
-                    </button>
-                </h2>
-                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                        <strong>This is the second item’s accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                    </div>
-                </div>
-            </div>
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
-                        Pregunta #3
-                    </button>
-                </h2>
-                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-                        <strong>This is the third item’s accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
+
+<section class="mt-5">
+    @await Html.PartialAsync("_Accordion", new AccordionViewModel
+    {
+        AccordionTitle = "Preguntas frecuentes",
+        AccordionItems = [
+                new AccordionItemViewModel { Id = 1, Title = "Pregunta #1", Description = "This is the first item’s accordion body.It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the .accordion-body , though the transition does limit overflow.", CollapseId = "collapseOne" },
+             new AccordionItemViewModel { Id = 2, Title = "Pregunta #2", Description = "This is the first item’s accordion body.It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the .accordion-body , though the transition does limit overflow.", CollapseId = "collapseTwo" },
+              new AccordionItemViewModel { Id = 3, Title = "Pregunta #3", Description = "This is the first item’s accordion body.It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the .accordion-body , though the transition does limit overflow.", CollapseId = "collapseThree" },
+        ]
+    })
+</section>

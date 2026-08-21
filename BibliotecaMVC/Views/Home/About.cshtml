@@ -36,9 +36,32 @@
     </aside>
 </section>
 
+<section>
+    @await Html.PartialAsync("_Counters", new CountersViewModel
+    {
+        Counters = [
+            new CounterItemViewModel { Id = 1, Header = "20+", Description = "Clientes satisfechos." },
+            new CounterItemViewModel { Id = 2, Header = "15", Description = "Años de experiencia." },
+            new CounterItemViewModel { Id = 3, Header = "24/7", Description = "Soporte disponible para asegurar que el sistema se mantenga operativo." }
+        ]
+    })
+</section>
+
 <section class="team-section">
     <figure>
         <img src="https://picsum.photos/900/350" alt="Biblioteca" />
         <figcaption>Biblioteca virtual desarrollada con ASP.NET Core MVC</figcaption>
     </figure>
+</section>
+
+<section>
+    @await Html.PartialAsync("_Accordion", new AccordionViewModel
+    {
+        AccordionTitle = "Integrar nuestra solución nunca fue tan fácil...",
+        AccordionItems = [
+new AccordionItemViewModel { Id = 1, Title = "Paso #1", Description = "This is the first item’s accordion body.It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the .accordion-body , though the transition does limit overflow.", CollapseId = "collapseOne" },
+             new AccordionItemViewModel { Id = 2, Title = "Paso #2", Description = "This is the first item’s accordion body.It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the .accordion-body , though the transition does limit overflow.", CollapseId = "collapseTwo" },
+              new AccordionItemViewModel { Id = 3, Title = "Paso #3", Description = "This is the first item’s accordion body.It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the .accordion-body , though the transition does limit overflow.", CollapseId = "collapseThree" },
+        ]
+    })
 </section>
