@@ -1,0 +1,33 @@
+﻿@model BibliotecaMVC.Models.AccordionViewModel;
+
+<div class="container">
+    <div class="row mb-2">
+        <h1 class="text-center">
+            @Model.AccordionTitle
+        </h1>
+    </div>
+    <div class="row">
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            @foreach(var item in Model.AccordionItems)
+            {
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button @(item.Id != 1 ? "collapsed" : "")"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#panelsStayOpen-@item.CollapseId"
+                                aria-expanded="@item.Id == 1"
+                                aria-controls="panelsStayOpen-@item.CollapseId">
+                            @item.Title
+                        </button>
+                    </h2>
+                    <div id="panelsStayOpen-@item.CollapseId" class="accordion-collapse collapse @(item.Id != 1 ? "" : "show")">
+                        <div class="accordion-body">
+                            @item.Description
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>

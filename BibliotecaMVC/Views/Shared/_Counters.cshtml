@@ -1,0 +1,13 @@
+﻿@model BibliotecaMVC.Models.CountersViewModel;
+
+<div class="container mt-5">
+    <div class="row text-center">
+        @foreach(var item in Model.Counters)
+        {
+            <div class="col-md-4">
+                <h2 class="text-primary">@item.Header</h2>
+                <p>@item.Description</p>
+            </div>
+        }
+    </div>
+</div>
