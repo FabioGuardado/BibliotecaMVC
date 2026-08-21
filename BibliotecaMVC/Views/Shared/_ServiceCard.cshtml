@@ -1,8 +1,8 @@
 ﻿@model BibliotecaMVC.Models.ServiceCard;
 
-<div class="card-demo">
-    <img src="@Model.ImageUrl" alt="@Model.Text" class="card-img-top">
-    <div class="card-body">
-        <p class="card-text">@Model.Text</p>
+<div class="@Model.customClasses service-card">
+    <img src="@Model.ImageUrl" alt="@Model.Text" class="service-card-image">
+    <div class="service-card-body">
+        <p class="service-card-title">@Model.Text</p>
     </div>
 </div>
