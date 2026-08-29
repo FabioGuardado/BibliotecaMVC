@@ -1,21 +1,19 @@
 ﻿using BibliotecaMVC.Models;
+using BibliotecaMVC.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BibliotecaMVC.Controllers
 {
     public class LibrosController : Controller
     {
-        private static List<Libro> _libros = new List<Libro>()
-            {
-                new Libro { ID = 1, Titulo = "Clean Code", Autor = "Robert Martin", Categoria = "Programación", Precio = 35.5M, Disponible = true, ImageUrl = null },
-                new Libro { ID = 2, Titulo = "Cien Años de Soledad", Autor = "Gabriel García Márquez", Categoria = "Literatura", Precio = 18, Disponible = false, ImageUrl = null },
-            };
+        private readonly IRepositorioLibro _repositorio;
 
         private readonly IWebHostEnvironment _environment;
 
-        public LibrosController(IWebHostEnvironment environment)
+        public LibrosController(IWebHostEnvironment environment, IRepositorioLibro repositorioLibro)
         {
             _environment = environment;
+            _repositorio = repositorioLibro;
         }
 
         private async Task<string> ProcessImageUploadAsync(IFormFile file)
@@ -47,12 +45,13 @@ namespace BibliotecaMVC.Controllers
 
         public IActionResult Index()
         {
-            return View(_libros);
+            var libros = _repositorio.ObtenerTodos();
+            return View(libros);
         }
 
         public IActionResult Details(int id)
         {
-            var libro = _libros.FirstOrDefault(a => a.ID == id);
+            var libro = _repositorio.ObtenerLibroPorId(id);
             if (libro == null)
             {
                 return NotFound();
@@ -75,7 +74,7 @@ namespace BibliotecaMVC.Controllers
 
                 var newLibro = new Libro()
                 {
-                    ID = _libros.Max(a => a.ID) + 1,
+                    ID = _repositorio.ObtenerIdParaNuevoLibro(),
                     Autor = libro.Autor,
                     Titulo = libro.Titulo,
                     Categoria = libro.Categoria,
@@ -84,7 +83,7 @@ namespace BibliotecaMVC.Controllers
                     ImageUrl = imageUrl
                 };
 
-                _libros.Add(newLibro);
+               _repositorio.Crear(newLibro);
                 return RedirectToAction("Index");
             }
             return View(libro);
@@ -92,7 +91,7 @@ namespace BibliotecaMVC.Controllers
 
         public IActionResult Edit(int id)
         {
-            var libro = _libros.FirstOrDefault(a => a.ID == id);
+            var libro = _repositorio.ObtenerLibroPorId(id);
             if (libro == null)
             {
                 return NotFound();
@@ -106,7 +105,7 @@ namespace BibliotecaMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                var existinglibro = _libros.FirstOrDefault(a => a.ID == libro.ID);
+                var existinglibro = _repositorio.ObtenerLibroPorId(libro.ID);
                 if (existinglibro == null)
                 {
                     return NotFound();
@@ -127,10 +126,10 @@ namespace BibliotecaMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Delete(int id)
         {
-            var item = _libros.FirstOrDefault(a => a.ID == id);
+            var item = _repositorio.ObtenerLibroPorId(id);
             if (item != null)
             {
-                _libros.Remove(item);
+                _repositorio.Eliminar(item);
             }
 
             return RedirectToAction("Index");
