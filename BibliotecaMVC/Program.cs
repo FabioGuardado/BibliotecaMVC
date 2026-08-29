@@ -7,6 +7,8 @@ builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<IRepositorioLibro, RepositorioEnMemoria>();
 
+builder.Services.AddSingleton<IAutorService, AutorService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
