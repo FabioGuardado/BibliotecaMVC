@@ -35,7 +35,7 @@ namespace BibliotecaMVC.Controllers
                         }
                     }
                 }
-                return View();
+                return View(categorias);
             }
         }
 
