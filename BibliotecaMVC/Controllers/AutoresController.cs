@@ -1,6 +1,8 @@
-﻿using BibliotecaMVC.Models;
+﻿using BibliotecaMVC.Data;
+using BibliotecaMVC.Models;
 using BibliotecaMVC.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaMVC.Controllers
 {
@@ -8,19 +10,28 @@ namespace BibliotecaMVC.Controllers
     {
         private readonly IAutorService _autorService;
 
-        public AutoresController(IAutorService autorService)
+        private readonly BibliotecaContext _context;
+
+        public AutoresController(IAutorService autorService, BibliotecaContext context)
         {
             _autorService = autorService;
+            _context = context;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            return View(_autorService.ObtenerTodos());
+            // return View(_autorService.ObtenerTodos());
+
+            var autores = await _context.Autores.ToListAsync();
+            return View(autores);
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var autor = _autorService.ObtenerAutorPorId(id);
+            // var autor = _autorService.ObtenerAutorPorId(id);
+
+            var autor = await _context.Autores.FindAsync(id);
+
             if (autor == null)
             {
                 return NotFound();
@@ -35,15 +46,25 @@ namespace BibliotecaMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Autor autor)
+        public async Task<IActionResult> Create(Autor autor)
         {
-            if (ModelState.IsValid)
+            /* if (ModelState.IsValid)
             {
                 autor.ID = _autorService.ObtenerIdParaNuevoAutor();
                 _autorService.Crear(autor);
                 return RedirectToAction("Index");
             }
-            return View(autor);
+            return View(autor); */
+
+            if (!ModelState.IsValid)
+            {
+                return View(autor);
+            }
+
+            _context.Autores.Add(autor);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(int id)

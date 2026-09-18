@@ -1,6 +1,8 @@
-﻿using BibliotecaMVC.Models;
+﻿using BibliotecaMVC.Data;
+using BibliotecaMVC.Models;
 using BibliotecaMVC.Repositories;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaMVC.Controllers
 {
@@ -10,10 +12,13 @@ namespace BibliotecaMVC.Controllers
 
         private readonly IWebHostEnvironment _environment;
 
-        public LibrosController(IWebHostEnvironment environment, IRepositorioLibro repositorioLibro)
+        private readonly BibliotecaContext _context;
+
+        public LibrosController(IWebHostEnvironment environment, IRepositorioLibro repositorioLibro, BibliotecaContext context)
         {
             _environment = environment;
             _repositorio = repositorioLibro;
+            _context = context;
         }
 
         private async Task<string> ProcessImageUploadAsync(IFormFile file)
@@ -43,15 +48,19 @@ namespace BibliotecaMVC.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var libros = _repositorio.ObtenerTodos();
+            // var libros = _repositorio.ObtenerTodos();
+
+            var libros = await _context.Libros.ToListAsync();
             return View(libros);
         }
 
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
-            var libro = _repositorio.ObtenerLibroPorId(id);
+            // var libro = _repositorio.ObtenerLibroPorId(id);
+
+            var libro = await _context.Libros.FindAsync(id);
             if (libro == null)
             {
                 return NotFound();
@@ -68,7 +77,7 @@ namespace BibliotecaMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CreateLibroViewModel libro)
         {
-            if (ModelState.IsValid)
+            /* if (ModelState.IsValid)
             {
                 string imageUrl = await ProcessImageUploadAsync(libro.ImageFile);
 
@@ -86,7 +95,29 @@ namespace BibliotecaMVC.Controllers
                _repositorio.Crear(newLibro);
                 return RedirectToAction("Index");
             }
-            return View(libro);
+            return View(libro); */
+
+            if (!ModelState.IsValid)
+            {
+                return View(libro);
+            }
+
+            string imageUrl = await ProcessImageUploadAsync(libro.ImageFile);
+
+            var newLibro = new Libro()
+            {
+                Autor = libro.Autor,
+                Titulo = libro.Titulo,
+                Categoria = libro.Categoria,
+                Precio = libro.Precio,
+                Disponible = libro.Disponible ?? true,
+                ImageUrl = imageUrl
+            };
+
+            _context.Libros.Add(newLibro);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         public IActionResult Edit(int id)
