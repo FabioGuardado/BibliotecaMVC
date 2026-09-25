@@ -120,9 +120,10 @@ namespace BibliotecaMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var libro = _repositorio.ObtenerLibroPorId(id);
+            // var libro = _repositorio.ObtenerLibroPorId(id);
+            var libro = await _context.Libros.FindAsync(id);
             if (libro == null)
             {
                 return NotFound();
@@ -132,38 +133,65 @@ namespace BibliotecaMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Libro libro)
+        public async Task<IActionResult> Edit(Libro libro)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            //    var existinglibro = _repositorio.ObtenerLibroPorId(libro.ID);
+            //    if (existinglibro == null)
+            //    {
+            //        return NotFound();
+            //    }
+
+            //    existinglibro.Titulo = libro.Titulo;
+            //    existinglibro.Autor = libro.Autor;
+            //    existinglibro.Categoria = libro.Categoria;
+            //    existinglibro.Precio = libro.Precio;
+            //    existinglibro.Disponible = libro.Disponible;
+
+            //    return RedirectToAction("Index");
+            //}
+            //return View(libro);
+
+            if (!ModelState.IsValid)
             {
-                var existinglibro = _repositorio.ObtenerLibroPorId(libro.ID);
-                if (existinglibro == null)
-                {
-                    return NotFound();
-                }
-
-                existinglibro.Titulo = libro.Titulo;
-                existinglibro.Autor = libro.Autor;
-                existinglibro.Categoria = libro.Categoria;
-                existinglibro.Precio = libro.Precio;
-                existinglibro.Disponible = libro.Disponible;
-
-                return RedirectToAction("Index");
+                return View(libro);
             }
-            return View(libro);
+
+            var exists = await _context.Libros.AnyAsync(a => a.ID == libro.ID);
+
+            if (!exists)
+            {
+                return NotFound();
+            }
+
+            _context.Update(libro);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var item = _repositorio.ObtenerLibroPorId(id);
-            if (item != null)
+            //var item = _repositorio.ObtenerLibroPorId(id);
+            //if (item != null)
+            //{
+            //    _repositorio.Eliminar(item);
+            //}
+
+            //return RedirectToAction("Index");
+
+            var libro = await _context.Libros.FindAsync(id);
+            if (libro == null)
             {
-                _repositorio.Eliminar(item);
+                return NotFound();
             }
 
-            return RedirectToAction("Index");
+            _context.Libros.Remove(libro);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }

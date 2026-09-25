@@ -45,7 +45,7 @@
                         <div class="d-flex flex-row gap-2 justify-content-start align-items-end">
                             <a asp-action="Details" asp-route-id="@libro.ID">Ver</a>
                             <a asp-action="Edit" asp-route-id="@libro.ID">Editar</a>
-                            <form asp-action="Delete" asp-route-id="@libro.ID" method="post" class="d-inline">
+                            <form asp-action="Delete" asp-route-id="@libro.ID" method="post" class="d-inline swal-delete-form">
                                 <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                             </form>
                         </div>
