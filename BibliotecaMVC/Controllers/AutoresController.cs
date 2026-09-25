@@ -67,9 +67,10 @@ namespace BibliotecaMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            var autor = _autorService.ObtenerAutorPorId(id);
+            // var autor = _autorService.ObtenerAutorPorId(id);
+            var autor = await _context.Autores.FindAsync(id);
             if (autor == null)
             {
                 return NotFound();
@@ -79,38 +80,65 @@ namespace BibliotecaMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(Autor autor)
+        public async Task<IActionResult> Edit(Autor autor)
         {
-            if (ModelState.IsValid)
+            //if (ModelState.IsValid)
+            //{
+            //    var existingAutor = _autorService.ObtenerAutorPorId(autor.ID);
+            //    if (existingAutor == null)
+            //    {
+            //        return NotFound();
+            //    }
+
+            //    existingAutor.Nombre = autor.Nombre;
+            //    existingAutor.Apellido = autor.Apellido;
+            //    existingAutor.Nacionalidad = autor.Nacionalidad;
+            //    existingAutor.FechaNacimiento = autor.FechaNacimiento;
+            //    existingAutor.Activo = autor.Activo;
+
+            //    return RedirectToAction("Index");
+            //}
+            //return View(autor);
+
+            if (!ModelState.IsValid)
             {
-                var existingAutor = _autorService.ObtenerAutorPorId(autor.ID);
-                if (existingAutor == null)
-                {
-                    return NotFound();
-                }
-
-                existingAutor.Nombre = autor.Nombre;
-                existingAutor.Apellido = autor.Apellido;
-                existingAutor.Nacionalidad = autor.Nacionalidad;
-                existingAutor.FechaNacimiento = autor.FechaNacimiento;
-                existingAutor.Activo = autor.Activo;
-
-                return RedirectToAction("Index");
+                return View(autor);
             }
-            return View(autor);
+
+            var exists = await _context.Autores.AnyAsync(a => a.ID == autor.ID);
+
+            if (!exists) 
+            { 
+                return NotFound(); 
+            }
+
+            _context.Update(autor);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            var item = _autorService.ObtenerAutorPorId(id);
-            if (item != null)
+            //var item = _autorService.ObtenerAutorPorId(id);
+            //if (item != null)
+            //{
+            //    _autorService.Eliminar(item);
+            //}
+
+            //return RedirectToAction("Index");
+
+            var autor = await _context.Autores.FindAsync(id);
+            if (autor == null)
             {
-                _autorService.Eliminar(item);
+                return NotFound();
             }
 
-            return RedirectToAction("Index");
+            _context.Autores.Remove(autor);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
     }
 }
