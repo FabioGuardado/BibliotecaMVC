@@ -1,11 +1,13 @@
 ﻿using BibliotecaMVC.Data;
 using BibliotecaMVC.Models;
 using BibliotecaMVC.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaMVC.Controllers
 {
+    [Authorize]
     public class LibrosController : Controller
     {
         private readonly IRepositorioLibro _repositorio;
