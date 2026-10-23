@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using BibliotecaMVC.Models;
+﻿using BibliotecaMVC.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 
 namespace BibliotecaMVC.Controllers
 {
+    [Authorize]
     public class CategoriasController : Controller
     {
         private readonly string _connectionString;

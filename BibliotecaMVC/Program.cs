@@ -1,3 +1,5 @@
+global using BibliotecaMVC.Authorization;
+
 using BibliotecaMVC.Repositories;
 using BibliotecaMVC.Data;
 using Microsoft.EntityFrameworkCore;
@@ -13,11 +15,17 @@ builder.Services.AddDbContext<BibliotecaContext>(options =>
         builder.Configuration.GetConnectionString("BibliotecaDB"))
 );
 
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<BibliotecaContext>();
+builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
+{
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
+    options.Lockout.AllowedForNewUsers = true;
+}).AddRoles<IdentityRole>().AddEntityFrameworkStores<BibliotecaContext>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Account/Login";
+    options.AccessDeniedPath = "/Account/AccessDenied";
 });
 
 builder.Services.AddSingleton<IRepositorioLibro, RepositorioEnMemoria>();
@@ -25,6 +33,12 @@ builder.Services.AddSingleton<IRepositorioLibro, RepositorioEnMemoria>();
 builder.Services.AddSingleton<IAutorService, AutorService>();
 
 var app = builder.Build();
+
+// Seed roles
+using (var scope = app.Services.CreateScope())
+{
+    await SeedRoles.InicializarAsync(scope.ServiceProvider);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -37,6 +51,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
