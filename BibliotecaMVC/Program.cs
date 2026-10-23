@@ -1,3 +1,5 @@
+global using BibliotecaMVC.Authorization;
+
 using BibliotecaMVC.Repositories;
 using BibliotecaMVC.Data;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +20,7 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(15);
     options.Lockout.AllowedForNewUsers = true;
-}).AddEntityFrameworkStores<BibliotecaContext>();
+}).AddRoles<IdentityRole>().AddEntityFrameworkStores<BibliotecaContext>();
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -31,6 +33,12 @@ builder.Services.AddSingleton<IRepositorioLibro, RepositorioEnMemoria>();
 builder.Services.AddSingleton<IAutorService, AutorService>();
 
 var app = builder.Build();
+
+// Seed roles
+using (var scope = app.Services.CreateScope())
+{
+    await SeedRoles.InicializarAsync(scope.ServiceProvider);
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
