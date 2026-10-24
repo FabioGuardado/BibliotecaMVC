@@ -21,9 +21,12 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Autores" asp-action="Index">Autores</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Usuarios">Usuarios</a>
-                    </li>
+                    @if (User.IsInRole(Roles.Admin))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Usuarios" asp-action="Index">Usuarios</a>
+                        </li>
+                    }
                     <li class="nav-item">
                         <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Prestamos">Préstamos</a>
                     </li>
