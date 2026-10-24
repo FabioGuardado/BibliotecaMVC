@@ -41,7 +41,7 @@ namespace BibliotecaMVC.Controllers
             }
         }
 
-
+        [AuthorizeRoles(Roles.Admin, Roles.Bibliotecario)]
         public IActionResult Create()
         {
             return View();
@@ -49,6 +49,7 @@ namespace BibliotecaMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRoles(Roles.Admin, Roles.Bibliotecario)]
         public IActionResult Create(Categoria categoria)
         {
             if (categoria == null || string.IsNullOrWhiteSpace(categoria.Nombre))
@@ -74,6 +75,7 @@ namespace BibliotecaMVC.Controllers
             return RedirectToAction("Index");
         }
 
+        [AuthorizeRoles(Roles.Admin, Roles.Bibliotecario)]
         public IActionResult Edit(int id)
         {
             Categoria categoria = null;
@@ -111,6 +113,7 @@ namespace BibliotecaMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRoles(Roles.Admin, Roles.Bibliotecario)]
         public IActionResult Edit(Categoria categoria)
         {
             if (categoria == null || string.IsNullOrWhiteSpace(categoria.Nombre))
@@ -139,6 +142,7 @@ namespace BibliotecaMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [AuthorizeRoles(Roles.Admin)]
         public IActionResult Delete(int id)
         {
             using (var conexion = new SqlConnection(_connectionString))
