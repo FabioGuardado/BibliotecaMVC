@@ -8,7 +8,10 @@
 <h1>@ViewData["Title"]</h1>
 <p>Hay @Model.Count() libros registrados.</p>
 
-<a asp-action="Create" class="btn btn-primary mb-4">Nuevo Libro +</a>
+@if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Bibliotecario))
+{
+    <a asp-action="Create" class="btn btn-primary mb-4">Nuevo Libro +</a>
+}
 
 <div class="row">
     @foreach (var libro in Model)
@@ -16,16 +19,16 @@
         <div class="col-md-4 mb-3">
             <div class="card">
                 <div class="card-img-top">
-                        @if (@libro.ImageUrl != null)
-                        {
-                            <img src="@libro.ImageUrl" alt="@libro.Titulo" class="img-fluid" />
-                        }
-                        else
-                        {
-                            <div class="d-flex align-items-center justify-content-center text-black">
-                                <i class="bi bi-book" style="font-size:100px;"></i>
-                            </div>
-                        }
+                    @if (@libro.ImageUrl != null)
+                    {
+                        <img src="@libro.ImageUrl" alt="@libro.Titulo" class="img-fluid" />
+                    }
+                    else
+                    {
+                        <div class="d-flex align-items-center justify-content-center text-black">
+                            <i class="bi bi-book" style="font-size:100px;"></i>
+                        </div>
+                    }
                 </div>
                 <div class="card-body">
                     <h5 class="card-title">@libro.Titulo</h5>
@@ -44,10 +47,16 @@
 
                         <div class="d-flex flex-row gap-2 justify-content-start align-items-end">
                             <a asp-action="Details" asp-route-id="@libro.ID">Ver</a>
-                            <a asp-action="Edit" asp-route-id="@libro.ID">Editar</a>
-                            <form asp-action="Delete" asp-route-id="@libro.ID" method="post" class="d-inline swal-delete-form">
-                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                            </form>
+                            @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Bibliotecario))
+                            {
+                                <a asp-action="Edit" asp-route-id="@libro.ID">Editar</a>
+                            }
+                            @if (User.IsInRole(Roles.Admin))
+                            {
+                                <form asp-action="Delete" asp-route-id="@libro.ID" method="post" class="d-inline swal-delete-form">
+                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                </form>
+                            }
                         </div>
                     </div>
                 </div>

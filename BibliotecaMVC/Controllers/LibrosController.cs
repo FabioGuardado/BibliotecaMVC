@@ -179,7 +179,7 @@ namespace BibliotecaMVC.Controllers
 
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [AuthorizeRoles(Roles.Admin, Roles.Bibliotecario)]
+        [AuthorizeRoles(Roles.Admin)]
         public async Task<IActionResult> Delete(int id)
         {
             //var item = _repositorio.ObtenerLibroPorId(id);

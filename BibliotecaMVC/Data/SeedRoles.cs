@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace BibliotecaMVC.Data
 {
@@ -29,6 +30,18 @@ namespace BibliotecaMVC.Data
                 };
                 await userManager.CreateAsync(admin, "Admin123!");
                 await userManager.AddToRoleAsync(admin, "Admin");
+            }
+
+            var usuarios = await userManager.Users.ToListAsync();
+            foreach (var user in usuarios) {
+                if ((await userManager.GetRolesAsync(user)).Count == 0)
+                {
+                    var result = await userManager.AddToRoleAsync(user, Roles.Usuario);
+                    if (!result.Succeeded)
+                    {
+                        throw new InvalidOperationException($"No se pudo asignar el rol Usuario a {user.UserName}: {string.Join(", ", result.Errors.Select(error => error.Description))}");
+                    }
+                }
             }
         }
     }

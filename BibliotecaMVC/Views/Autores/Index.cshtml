@@ -8,7 +8,10 @@
 <h1>@ViewData["Title"]</h1>
 <p>Hay @Model.Count() autores registrados.</p>
 
-<a asp-action="Create" class="btn btn-primary mb-4">Nuevo Autor +</a>
+@if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Bibliotecario))
+{
+    <a asp-action="Create" class="btn btn-primary mb-4">Nuevo Autor +</a>
+}
 
 <div class="row">
     @foreach (var autor in Model)
@@ -25,10 +28,17 @@
 
                         <div class="d-flex flex-row gap-2 justify-content-start align-items-end">
                             <a asp-action="Details" asp-route-id="@autor.ID">Ver</a>
-                            <a asp-action="Edit" asp-route-id="@autor.ID" class="swal-edit-link">Editar</a>
-                            <form asp-action="Delete" asp-route-id="@autor.ID" method="post" class="d-inline swal-delete-form">
-                                <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
-                            </form>
+                            @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Bibliotecario))
+                            {
+                                <a asp-action="Edit" asp-route-id="@autor.ID" class="swal-edit-link">Editar</a>
+                            }
+                            @if (User.IsInRole(Roles.Admin))
+                            {
+
+                                <form asp-action="Delete" asp-route-id="@autor.ID" method="post" class="d-inline swal-delete-form">
+                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                </form>
+                            }
                         </div>
                     </div>
                 </div>
