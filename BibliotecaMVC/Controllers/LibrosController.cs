@@ -5,6 +5,7 @@ using BibliotecaMVC.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace BibliotecaMVC.Controllers
 {
@@ -16,12 +17,14 @@ namespace BibliotecaMVC.Controllers
         private readonly IWebHostEnvironment _environment;
 
         private readonly BibliotecaContext _context;
+        private readonly ILogger<AutoresController> _logger;
 
-        public LibrosController(IWebHostEnvironment environment, IRepositorioLibro repositorioLibro, BibliotecaContext context)
+        public LibrosController(IWebHostEnvironment environment, IRepositorioLibro repositorioLibro, BibliotecaContext context, ILogger<AutoresController> logger)
         {
             _environment = environment;
             _repositorio = repositorioLibro;
             _context = context;
+            _logger = logger;
         }
 
         private async Task<string> ProcessImageUploadAsync(IFormFile file)
@@ -55,25 +58,47 @@ namespace BibliotecaMVC.Controllers
         {
             // var libros = _repositorio.ObtenerTodos();
 
-            var libros = await _context.Libros.ToListAsync();
-            return View(libros);
+            _logger.LogInformation("Consultando el listado de Libros");
+
+            try
+            {
+                var libros = await _context.Libros.ToListAsync();
+                return View(libros);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Se produjo un error al consultar el listado de libros");
+                throw;
+            }
         }
 
         public async Task<IActionResult> Details(int id)
         {
             // var libro = _repositorio.ObtenerLibroPorId(id);
 
-            var libro = await _context.Libros.FindAsync(id);
-            if (libro == null)
+            _logger.LogInformation("Consultando los detalles del libro con identificador {LibroId}", id);
+            
+            try
             {
-                return NotFound();
+                var libro = await _context.Libros.FindAsync(id);
+                if (libro == null)
+                {
+                    _logger.LogWarning("No se encontró el libro solicitado con identificador {LibroId}", id);
+                    return NotFound();
+                }
+                return View(libro);
             }
-            return View(libro);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Se produjo un error al consultar los detalles del libro con identificador {LibroId}", id);
+                throw;
+            }
         }
 
         [AuthorizeRoles(Roles.Admin, Roles.Bibliotecario)]
         public IActionResult Create()
         {
+            _logger.LogInformation("Iniciando la operación de creación de un libro");
             return View();
         }
 
@@ -102,39 +127,60 @@ namespace BibliotecaMVC.Controllers
             }
             return View(libro); */
 
+            _logger.LogInformation("Iniciando la operación de creación de un libro");
+
             if (!ModelState.IsValid)
             {
+                _logger.LogError("El libro enviado no cumple con los requerimientos mínimos.");
                 return View(libro);
             }
 
-            string imageUrl = await ProcessImageUploadAsync(libro.ImageFile);
-
-            var newLibro = new Libro()
+            try
             {
-                Autor = libro.Autor,
-                Titulo = libro.Titulo,
-                Categoria = libro.Categoria,
-                Precio = libro.Precio,
-                Disponible = libro.Disponible ?? true,
-                ImageUrl = imageUrl
-            };
+                string imageUrl = await ProcessImageUploadAsync(libro.ImageFile);
 
-            _context.Libros.Add(newLibro);
-            await _context.SaveChangesAsync();
+                var newLibro = new Libro()
+                {
+                    Autor = libro.Autor,
+                    Titulo = libro.Titulo,
+                    Categoria = libro.Categoria,
+                    Precio = libro.Precio,
+                    Disponible = libro.Disponible ?? true,
+                    ImageUrl = imageUrl
+                };
 
-            return RedirectToAction(nameof(Index));
+                _context.Libros.Add(newLibro);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Se produjo un error al crear el libro");
+                throw;
+            }
         }
 
         [AuthorizeRoles(Roles.Admin, Roles.Bibliotecario)]
         public async Task<IActionResult> Edit(int id)
         {
             // var libro = _repositorio.ObtenerLibroPorId(id);
-            var libro = await _context.Libros.FindAsync(id);
-            if (libro == null)
+            _logger.LogInformation("Iniciando la operación de edición del libro con identificador {LibroId}", id);
+
+            try
             {
-                return NotFound();
+                var libro = await _context.Libros.FindAsync(id);
+                if (libro == null)
+                {
+                    return NotFound();
+                }
+                return View(libro);
             }
-            return View(libro);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Se produjo un error al consultar los detalles del libro para su edición con identificador {LibroId}", id);
+                throw;
+            }
         }
 
         [HttpPost]
@@ -160,21 +206,31 @@ namespace BibliotecaMVC.Controllers
             //}
             //return View(libro);
 
+            _logger.LogInformation("Iniciando la edición del libro con identificador {LibroID}", libro.ID);
+
             if (!ModelState.IsValid)
             {
                 return View(libro);
             }
 
-            var exists = await _context.Libros.AnyAsync(a => a.ID == libro.ID);
-
-            if (!exists)
+            try
             {
-                return NotFound();
-            }
+                var exists = await _context.Libros.AnyAsync(a => a.ID == libro.ID);
 
-            _context.Update(libro);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+                if (!exists)
+                {
+                    return NotFound();
+                }
+
+                _context.Update(libro);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Se produjo un error al editar el libro con identificador {LibroID}", libro.ID);
+                throw;
+            }
         }
 
         [HttpPost, ActionName("Delete")]
@@ -190,16 +246,27 @@ namespace BibliotecaMVC.Controllers
 
             //return RedirectToAction("Index");
 
-            var libro = await _context.Libros.FindAsync(id);
-            if (libro == null)
+            _logger.LogInformation("Iniciando la eliminación del autor con identificador {LibroID}", id);
+
+            try
             {
-                return NotFound();
+                var libro = await _context.Libros.FindAsync(id);
+                if (libro == null)
+                {
+                    _logger.LogWarning("No se encontró el libro solicitado con identificador {LibroID}", id);
+                    return NotFound();
+                }
+
+                _context.Libros.Remove(libro);
+                await _context.SaveChangesAsync();
+
+                return RedirectToAction(nameof(Index));
             }
-
-            _context.Libros.Remove(libro);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Se produjo un error al eliminar el libro con identificador {LibroID}", id);
+                throw;
+            }
         }
     }
 }
