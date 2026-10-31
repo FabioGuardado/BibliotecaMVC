@@ -11,14 +11,12 @@ namespace BibliotecaMVC.Controllers
     [Authorize]
     public class AutoresController : Controller
     {
-        private readonly IAutorService _autorService;
 
         private readonly BibliotecaContext _context;
         private readonly ILogger<AutoresController> _logger;
 
-        public AutoresController(IAutorService autorService, BibliotecaContext context, ILogger<AutoresController> logger)
+        public AutoresController(BibliotecaContext context, ILogger<AutoresController> logger)
         {
-            _autorService = autorService;
             _context = context;
             _logger = logger;
         }
