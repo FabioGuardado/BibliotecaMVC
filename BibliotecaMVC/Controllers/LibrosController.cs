@@ -17,9 +17,9 @@ namespace BibliotecaMVC.Controllers
         private readonly IWebHostEnvironment _environment;
 
         private readonly BibliotecaContext _context;
-        private readonly ILogger<AutoresController> _logger;
+        private readonly ILogger<LibrosController> _logger;
 
-        public LibrosController(IWebHostEnvironment environment, IRepositorioLibro repositorioLibro, BibliotecaContext context, ILogger<AutoresController> logger)
+        public LibrosController(IWebHostEnvironment environment, IRepositorioLibro repositorioLibro, BibliotecaContext context, ILogger<LibrosController> logger)
         {
             _environment = environment;
             _repositorio = repositorioLibro;
