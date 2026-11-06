@@ -3,6 +3,7 @@ using BibliotecaMVC.Data;
 using BibliotecaMVC.Models;
 using BibliotecaMVC.Repositories;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -258,6 +259,110 @@ public class LibrosControllerTests
         VerifyLog(logger, LogLevel.Warning, Times.Once());
     }
 
+    [Theory]
+    [InlineData(nameof(CreateLibroViewModel.Titulo))]
+    [InlineData(nameof(CreateLibroViewModel.Autor))]
+    [InlineData(nameof(CreateLibroViewModel.Categoria))]
+    [InlineData(nameof(CreateLibroViewModel.Precio))]
+    public async Task Create_ConCualquierCampoInvalido_NoGuardaElLibro(string propiedad)
+    {
+        await using var context = CreateContext();
+        var controller = CreateController(context);
+        controller.ModelState.AddModelError(propiedad, "Valor inválido.");
+
+        var result = await controller.Create(CreateViewModel("Título", "Autor"));
+
+        Assert.IsType<ViewResult>(result);
+        Assert.Empty(context.Libros);
+    }
+
+    [Theory]
+    [InlineData(nameof(Libro.Titulo))]
+    [InlineData(nameof(Libro.Autor))]
+    [InlineData(nameof(Libro.Categoria))]
+    [InlineData(nameof(Libro.Precio))]
+    public async Task EditPost_ConCualquierCampoInvalido_NoActualizaElLibro(string propiedad)
+    {
+        var databaseName = Guid.NewGuid().ToString();
+        int libroId;
+        await using (var seedContext = CreateContext(databaseName))
+        {
+            var libro = CreateLibro("Título original", "Autor");
+            seedContext.Libros.Add(libro);
+            await seedContext.SaveChangesAsync();
+            libroId = libro.ID;
+        }
+
+        await using var context = CreateContext(databaseName);
+        var controller = CreateController(context);
+        controller.ModelState.AddModelError(propiedad, "Valor inválido.");
+        var libroEditado = CreateLibro("Título modificado", "Autor");
+        libroEditado.ID = libroId;
+
+        var result = await controller.Edit(libroEditado);
+
+        Assert.IsType<ViewResult>(result);
+        Assert.Equal("Título original", (await context.Libros.AsNoTracking().SingleAsync()).Titulo);
+    }
+
+    [Fact]
+    public async Task Index_RegistraLaConsultaDelListado()
+    {
+        await using var context = CreateContext();
+        var logger = new Mock<ILogger<LibrosController>>();
+        var controller = CreateController(context, logger);
+
+        await controller.Index();
+
+        VerifyLog(logger, LogLevel.Information, Times.Once());
+        VerifyLog(logger, LogLevel.Error, Times.Never());
+    }
+
+    [Fact]
+    public async Task Index_ConContextoNoDisponible_RegistraElErrorYLoRelanza()
+    {
+        var context = CreateContext();
+        var logger = new Mock<ILogger<LibrosController>>();
+        var controller = CreateController(context, logger);
+        await context.DisposeAsync();
+
+        await Assert.ThrowsAsync<ObjectDisposedException>(() => controller.Index());
+
+        VerifyLog(logger, LogLevel.Error, Times.Once());
+    }
+
+    [Fact]
+    public async Task Create_ConImagen_GuardaLaRutaConLaExtensionOriginal()
+    {
+        var webRootPath = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+        try
+        {
+            await using var context = CreateContext();
+            var controller = CreateController(context, webRootPath: webRootPath);
+            var imagen = new Mock<IFormFile>();
+            imagen.Setup(f => f.FileName).Returns("portada.png");
+            imagen.Setup(f => f.Length).Returns(10);
+            imagen.Setup(f => f.CopyToAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>())).Returns(Task.CompletedTask);
+            var libro = CreateViewModel("Libro con portada", "Autor");
+            libro.ImageFile = imagen.Object;
+
+            await controller.Create(libro);
+
+            var guardado = await context.Libros.SingleAsync();
+            Assert.NotNull(guardado.ImageUrl);
+            Assert.StartsWith("/Images/", guardado.ImageUrl);
+            Assert.EndsWith(".png", guardado.ImageUrl);
+            imagen.Verify(f => f.CopyToAsync(It.IsAny<Stream>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+        finally
+        {
+            if (Directory.Exists(webRootPath))
+            {
+                Directory.Delete(webRootPath, recursive: true);
+            }
+        }
+    }
+
     [Fact]
     public async Task Acciones_NoUtilizanElRepositorioDeLibros()
     {
@@ -299,10 +404,11 @@ public class LibrosControllerTests
     private static LibrosController CreateController(
         BibliotecaContext context,
         Mock<ILogger<LibrosController>>? logger = null,
-        Mock<IRepositorioLibro>? repositorio = null)
+        Mock<IRepositorioLibro>? repositorio = null,
+        string? webRootPath = null)
     {
         var environment = new Mock<IWebHostEnvironment>();
-        environment.Setup(e => e.WebRootPath).Returns(Path.GetTempPath());
+        environment.Setup(e => e.WebRootPath).Returns(webRootPath ?? Path.GetTempPath());
         logger ??= new Mock<ILogger<LibrosController>>();
         repositorio ??= new Mock<IRepositorioLibro>();
         return new LibrosController(environment.Object, repositorio.Object, context, logger.Object);
