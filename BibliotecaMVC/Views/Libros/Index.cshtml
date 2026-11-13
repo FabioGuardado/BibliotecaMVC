@@ -10,7 +10,12 @@
 
 @if (User.IsInRole(Roles.Admin) || User.IsInRole(Roles.Bibliotecario))
 {
-    <a asp-action="Create" class="btn btn-primary mb-4">Nuevo Libro +</a>
+    <div class="d-flex gap-2 mb-4">
+        <a class="btn btn-outline-danger" asp-controller="Reportes" asp-action="VerLibrosPdf" target="_blank" rel="noopener">Abrir reporte</a>
+        <a class="btn btn-danger" asp-controller="Reportes" asp-action="LibrosPdf">Generar reporte PDF</a>
+        <a class="btn btn-success" asp-controller="Reportes" asp-action="LibrosExcel">Exportar a Excel</a>
+        <a asp-action="Create" class="btn btn-primary">Nuevo Libro +</a>
+    </div>
 }
 
 <div class="row">
